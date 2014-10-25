@@ -3,11 +3,19 @@ grants
 - Title
 - Name
 - Gender
-- CareerStage
+- CareerStage (Based on Grant Type column)
+  - Early Career Research Fellow
+  - (Mid) Career Development Fellowship
+  - Senior Research Fellowship 
+  - Principal Senior Research Fellowship
 - GrantType
 - GrantSubType
 - ProjectType
+  Based on Grant Type column either,
+   - CareerStage fields (Salary based grants) or:
+   - Other Grant type 
 - GrantLength
+  - based on data in yearFunding table
 - Institution
 - State
 - TotalAmount

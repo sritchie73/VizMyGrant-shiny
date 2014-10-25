@@ -1,0 +1,21 @@
+grants
+- ApplicationId
+- Title
+- Name
+- Gender
+- CareerStage
+- GrantType
+- GrantSubType
+- ProjectType
+- GrantLength
+- Institution
+- State
+- TotalAmount
+- BroadArea
+- Category
+- FoR
+
+yearFunding
+- ApplicationId
+- Year
+- Amount

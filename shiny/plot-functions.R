@@ -1,4 +1,6 @@
-library(RColorBrewer)
+library(stringr)
+
+source("plot-functions.R")
 
 #' Get the plot limits to set for the desired plot window
 #'
@@ -26,207 +28,64 @@ nullPlot <- function(xlim=c(0,0), ylim=c(0,0), xlab="", ylab="", cex.lab=1) {
   mtext(ylab, side=2, cex=cex.lab)
 }
 
-plotData <- function(input) {
-  x.var <- input$x.cat
-  y.var <- input$y.cat
-  group <- input$group
-  filter <- input$filter
+# Make numbers human readable for axis text
+HumanReadable <- function(nums) {
+  max_num <- max(nums)
+  min_num <- min(nums)
+  diff <- max_num - min_num
   
-  x.type <- getType(x.var)
-  y.type <- getType(y.var)
-  g.type <- getType(group)
-  f.type <- getType(filter)
+  # split numbers over decimal point
+  nums <- as.character(nums)
+  left <- sapply(str_split(nums, "\\."), `[[`, 1)
+  tryCatch({ 
+    right <- sapply(str_split(nums, "\\."), `[[`, 2)
+  }, error = function(e) {
+    right <- NULL
+  })
+  # how many powers of ten are the numbers?
+  power <- max(nchar(gsub("-", "", left)))
   
-  x.query <- getDTQ(x.var)
-  y.query <- getDTQ(y.var)
-  g.query <- getDTQ(group)
-  f.query <- getDTQ(filter)
-  
-  x.table <- getTable(x.var)
-  y.table <- getTable(y.var)
-  g.table <- getTable(group)
-  f.table <- getTable(filter)
-  
-  # Join the tables for x and y if necessary
-  if (x.table == y.table) {
-    eval(parse(
-      text=paste0("joined <- ", x.table)
-    ))
-  } else {
-    stop("not implemented yet!")
-  }
-    
-  # Subset the data based on the filter
-  if (!is.na(f.type)) {
-    eval(parse(
-      text=paste0("subset <- joined[", f.query, "]")
-    ))
-  } else {
-    subset <- joined
-  }
-
-  print(f.query)
-  print(g.query)
-  print("---")
-  
-  if (grepl("(discrete)|(continuous)", x.type) && y.type == "categorical") {
-    # Get the Y categories
-    eval(parse(
-      text = paste0("ycats <- subset[, unique(", y.query, ")]")
-    ))
-    ycats <- ycats[!is.na(ycats)]
-    nycats <- length(ycats)
-    
-    
-    # What are the groups, and how many are there?
-    if (!is.na(g.type)) {
-      eval(parse(
-        text=paste0(
-          "groups <- subset[!is.na(", g.query, "), unique(", g.query, ")]"
-        )
-      ))
-      nGroups <- length(groups)
+  if (power == 1) { # probably grant length
+    if(is.null(right)) {
+      return(left)
     } else {
-      nGroups <- 0
+      return(nums)
     }
-            
-    # If there are only two groups, x is single value per category, and always
-    # positive or negative, we can flip over the y axis
-    if (grepl("(positive)", x.type) && grepl("(point)", x.type) && nGroups == 2) {
-      ylim = getLimsForManualUsr(c(0, nycats+0.1))
-      
-      # Determine the x limits
-      xmax <- 0
-      for (ycat in ycats) {
-        eval(parse(
-          text=paste0(
-            "xdat.g1 <- subset[", g.query, " == '", groups[1], "' & ",
-            y.query, " == '", ycat, "', ", x.query, "]"
-          ) 
-        ))
-        xmax <- max(c(xmax, xdat.g1))
-        eval(parse(
-          text=paste0(
-            "xdat.g2 <- subset[", g.query, " == '", groups[2], "' & ",
-            y.query, " == '", ycat, "', ", x.query, "]"
-          )  
-        ))
-        xmax <- max(c(xmax, xdat.g2)) 
+  } else if (power == 2) { # probably a percentage?
+    return(paste0(left))
+  } else if (power == 3) { # probably a total amount?
+    return(left)
+  } else { # probably $$
+    sapply(left, function(nn) {
+      pow <- nchar(gsub("-", "", nn))
+      if (grepl("-", nn)) {
+        first <- str_sub(nn, 1, 2)
+        second <- str_sub(nn, 3, 3)
+        third <- str_sub(nn, 4, 4)
+      } else {
+        first <- str_sub(nn, 1, 1)
+        second <- str_sub(nn, 2, 2)
+        third <- str_sub(nn, 3, 3)
       }
-      xlim = c(-1*(xmax*1.1), xmax*1.1)
       
-      
-      par(mar=c(5,8,4,8))
-      nullPlot(xlim=xlim, ylim=ylim)
-      mtext(x.var, side=1, line=3, cex=1.4)
-      axis(
-        side=1, at=seq(xlim[1], xlim[2], length=7),
-        labels=round(abs(seq(xlim[1], xlim[2], length=7)), digits=0)
-      )
-      
-      if (!is.null(lookup[[y.var]][["order"]])) {
-        ycats <- lookup[[y.var]][["order"]]
-      }
-      # For each category and group
-      for (ii in seq_along(ycats)) {
-        mtext(ycats[[ii]], side=2, at=ii-0.5, las=2)
-        for (jj in seq_along(groups)) {
-          eval(parse(
-            text=paste0(
-              "x.val <- subset[", g.query, " == '", groups[jj], "' & ",
-              y.query, " == '", ycats[[ii]], "', ", x.query, "]"  
-            )  
-          ))
-          
-          color <- lookup[[group]][["colors"]][[groups[jj]]]
-          
-          # plot on the left
-          if (jj == 1) {
-            rect(
-              xleft=-1*x.val,
-              ybottom=ii-1,
-              xright=0,
-              ytop=ii,
-              col=color
-            )
-          } else { # plot on the right
-            rect(
-              xleft=0,
-              ybottom=ii-1,
-              xright=x.val,
-              ytop=ii,
-              col=color
-            )
-          }
-        }
-      }
-      legend(
-        x=xmax*1.2, y=nycats/1.5, legend=names(lookup[[group]][["colors"]]), 
-        fill=unlist(lookup[[group]][["colors"]]), xpd=TRUE
-      ) 
-    }
-    
-    else if (grepl("(point)|(positive)", x.type)) {
-      ylim = getLimsForManualUsr(c(0, nycats+0.1))
-      
-      # Determine the x limits
-      xmax <- 0
-      xmin <- 0
-      for (ycat in ycats) {
-        eval(parse(
-          text=paste0(
-            "xdat <- subset[", y.query, " == '", ycat, "', ", x.query, "]"
-          ) 
-        ))
-        xmax <- max(c(xmax, xdat)) 
-        xmin <- min(c(xmin, xdat))
-      }
-      xlim = c(
-        ifelse(xmin == 0, 0, xmin*1.1), 
-        ifelse(xmax == 0, 0, xmax*1.1)
-      )
-      
-      par(mar=c(5,8,4,8))
-      nullPlot(xlim=xlim, ylim=ylim)
-      mtext(x.var, side=1, line=3, cex=1.4)
-      axis(
-        side=1, at=seq(xlim[1], xlim[2], length=7),
-        labels=round(abs(seq(xlim[1], xlim[2], length=7)), digits=0)
-      )
-      
-      if (!is.null(lookup[[y.var]][["order"]])) {
-        ycats <- lookup[[y.var]][["order"]]
-      }
-      # For each category and group
-      for (ii in seq_along(ycats)) {
-        mtext(ycats[[ii]], side=2, at=ii-0.5, las=2)
-       
-        eval(parse(
-          text=paste0(
-            "x.val <- subset[", y.query, " == '", ycats[[ii]], "', ", 
-            x.query, "]"  
-          )  
-        ))
-          
-        color <- "#e6550d"
-        if (xlim[1] == 0) {
-          rect(
-            xleft=0,
-            ybottom=ii-1,
-            xright=x.val,
-            ytop=ii,
-            col=color
-          )
-        } else { 
-          rect(
-            xleft=x.al,
-            ybottom=ii-1,
-            xright=0,
-            ytop=ii,
-            col=color
-          )
-        }
-      }
-    }
+      if (pow == 1)
+        return(nn)
+      if (pow == 2)
+        return(nn)
+      if (pow == 3)
+        return(nn)
+      if (pow == 4)
+        return(paste0(first, ".", second, "K"))
+      if (pow == 5)
+        return(paste0(first, second, "K"))
+      if (pow == 6)
+        return(paste0(first, second, third, "K"))
+      if (pow == 7)
+        return(paste0(first, ".", second, "M"))
+      if (pow == 8)
+        return(paste0(first, second, "M"))
+      if (pow == 9)
+        return(paste0(first, second, third, "M"))
+    })
   }
-}
+} 

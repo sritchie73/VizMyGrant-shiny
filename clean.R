@@ -1,4 +1,4 @@
-library(xlsx)
+ library(xlsx)
 library(data.table)
 library(stringr)
 library(gender)
@@ -100,6 +100,16 @@ clean[
 
 # determine career stage
 clean[
+  Title == "A/Pr",
+  CareerStage := "Mid Career"
+]
+ 
+clean[
+  Title == "Dr",
+  CareerStage := "Early Career"
+]
+ 
+clean[
   grepl("(Early Career Fellowship)", GrantType) |
   grepl("(ECF$)", GrantSubType),
   CareerStage := "Early Career"
@@ -130,8 +140,6 @@ clean[
   Title %in% c("E/Pr", "Prof"),
   CareerStage := "Senior"
 ]
-
-
 
 # Hack together long dataset
 fundOct2014 <- oct2014[,      
@@ -175,7 +183,9 @@ setkey(grantLength, "ApplicationId")
 setkey(clean, "ApplicationId")
 
 clean <- merge(clean, grantLength)
-
+ 
+# Remove bad rows
+clean <- clean[-which(ApplicationId == 1)]
 
 # Write out tables
 write.table(clean, file="cleaned.csv", sep=",", row.names=FALSE, quote=FALSE)

@@ -1,5 +1,4 @@
 ApplicationId,Title,Name,Gender,CareerStage,GrantType,isSalaryGrant,GrantSubType,Institution,State,BroadArea,Category,FoR,TotalAmount,GrantLength
-1,,,,,,NA,,,,,,,,NA
 585458,Prof,Shin-Ho Chung,NA,Senior,NHMRC Research Fellowships,TRUE,Research Fellowship-Retiring Fellow,Australian National University,ACT,Basic Science,OTHER PHYSICAL SCIENCES,Biotechnology,147996,1
 586607,Prof,Dmitri Sviridov,male,Senior,NHMRC Research Fellowships,TRUE,Research Fellowship-6th year,Baker IDI Heart and Diabetes Institute,VIC,Basic Science,CARDIOVASCULAR MEDICINE AND HAEMATOLOGY,Cardiology (incl. Cardiovascular Diseases),135162,1
 586651,Prof,Greg Rice,male,Senior,NHMRC Research Fellowships,TRUE,Research Fellowship-6th year,University of Queensland,QLD,Basic Science,PAEDIATRICS AND REPRODUCTIVE MEDICINE,Reproduction,147996,1

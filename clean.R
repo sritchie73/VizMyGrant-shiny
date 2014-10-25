@@ -141,8 +141,6 @@ clean[
   CareerStage := "Senior"
 ]
 
-
-
 # Hack together long dataset
 fundOct2014 <- oct2014[,      
   c(
@@ -185,6 +183,9 @@ setkey(grantLength, "ApplicationId")
 setkey(clean, "ApplicationId")
 
 clean <- merge(clean, grantLength)
+ 
+# Remove bad rows
+clean <- clean[-which(ApplicationId == 1)]
 
 # Write out tables
 write.table(clean, file="cleaned.csv", sep=",", row.names=FALSE, quote=FALSE)

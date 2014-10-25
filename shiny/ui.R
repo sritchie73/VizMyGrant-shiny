@@ -56,7 +56,7 @@ shinyUI(fluidPage(
             '; or a Grant Sub Type ending with "ECF"'
           ),
           tags$li(
-            strong("Mid Career:"), "where the individual's title Associated Professor;", 
+            strong("Mid Career:"), "where the individual's title Associate Professor;", 
             'or a Grant Type containing "Career Development Fellowship"; or a',
             'Grant Sub Type ending with "CDF"'
           ),

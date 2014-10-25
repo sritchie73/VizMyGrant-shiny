@@ -67,8 +67,8 @@ clean <- data.table(
       aug2014[,FOR_.CATEGORY]
     ),
     FoR = c(
-      oct2014[,Field.of.Research],
-      aug2014[,FIELD_OF_..RESEARCH]
+      gsub(",", "", oct2014[,Field.of.Research]),
+      gsub(",", "", aug2014[,FIELD_OF_..RESEARCH])
     ),
     TotalAmount = c(
       oct2014[,TOTAL],
@@ -88,7 +88,49 @@ first_names <- sapply(str_split(clean[,names], " "), `[[`, 1)
 gender <- sapply(gender(first_names), `[[`, "gender")
 clean[,Gender := gender]
 
+clean[
+  Title %in% c("Mrs", "Miss", "Ms"),
+  Gender := "female"
+]
+
+clean[
+  Title %in% c("Mr"),
+  Gender := "male"
+]
+
 # determine career stage
+clean[
+  grepl("(Early Career Fellowship)", GrantType) |
+  grepl("(ECF$)", GrantSubType),
+  CareerStage := "Early Career"
+]
+
+clean[
+  grepl("(Career Development Fellowship)", GrantType) |
+  grepl("(CDF$)", GrantSubType),
+  CareerStage := "Mid Career"
+]
+
+clean[
+  grepl("(Research Fellowship)", GrantSubType),
+  CareerStage := "Senior"
+]
+
+clean[
+  grepl("(NHMRC Partnerships)", GrantType),
+  CareerStage := "Senior"
+]
+
+clean[
+  Title %in% c("Mr", "Ms", "Mrs", "Miss"),
+  CareerStage := "Early Career"
+]
+
+clean[
+  Title %in% c("E/Pr", "Prof"),
+  CareerStage := "Senior"
+]
+
 
 
 # Hack together long dataset

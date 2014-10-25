@@ -137,6 +137,6 @@ clean <- merge(clean, grantLength)
 
 # Write out tables
 write.table(clean, file="cleaned.csv", sep=",", row.names=FALSE, quote=FALSE)
-write.table(longTable, file="funding-by-year.csv", sep="csv", row.names=FALSE, quote=FALSE)
+write.table(longTable, file="funding-by-year.csv", sep=",", row.names=FALSE, quote=FALSE)
 
   

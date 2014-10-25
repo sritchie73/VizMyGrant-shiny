@@ -85,10 +85,58 @@ clean[
 
 # determine gender
 first_names <- sapply(str_split(clean[,names], " "), `[[`, 1)
-gender <- sapply(sapply(first_names, gender), `[[`, "gender")
-clean[,gender := gender]
+gender <- sapply(gender(first_names), `[[`, "gender")
+clean[,Gender := gender]
 
 # determine career stage
 
+
+# Hack together long dataset
+fundOct2014 <- oct2014[,      
+  c(
+    match("APP.ID", colnames(oct2014)), 
+    grep("X[0-9][0-9][0-9][0-9]", colnames(oct2014))
+  ),
+  with=FALSE
+]
+
+fundAug2014 <- aug2014[,
+  c(
+    match("APP.ID", colnames(aug2014)), 
+    grep("X[0-9][0-9][0-9][0-9]", colnames(aug2014))
+  ),
+  with=FALSE
+]
+
+fundAug2014[,X2014 := NA_real_]
+
+fundTable <- rbind(fundOct2014, fundAug2014)
+
+longTable <- data.table(
+  ApplicationId = rep(fundTable[,APP.ID], 6),
+  Year = as.vector(sapply(c(2014:2019), rep, fundTable[,.N])),
+  Amount = c(
+    fundTable[,X2014],
+    fundTable[,X2015],
+    fundTable[,X2016],
+    fundTable[,X2017],
+    fundTable[,X2018],
+    fundTable[,X2019]
+  )
+)
+longTable <- longTable[!is.na(Amount)]
+
+# Calculate grant length and add to cleaned dataset
+grantLength <- longTable[,.N, by=ApplicationId]
+setnames(grantLength, "N", "GrantLength")
+setkey(grantLength, "ApplicationId")
+setkey(clean, "ApplicationId")
+
+clean <- merge(clean, grantLength)
+
+
+# Write out tables
+write.table(clean, file="cleaned.csv", sep=",", row.names=FALSE, quote=FALSE)
+write.table(longTable, file="funding-by-year.csv", sep="csv", row.names=FALSE, quote=FALSE)
 
   

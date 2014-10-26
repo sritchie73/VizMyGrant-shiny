@@ -95,5 +95,3 @@ marginSize <- function(labels) {
   max_len <- max(sapply(labels, strwidth))
   max_len * 60
 }
-
-

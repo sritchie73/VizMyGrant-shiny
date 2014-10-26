@@ -55,12 +55,12 @@ lookup <- list(
     var.query="GrantSubType",
     table="full2014"
   ),
-  "Salary Grants"=list(
+  "Fellowship Grants"=list(
     var.type="categorical",
     var.query="!is.na(isSalaryGrant) & isSalaryGrant == TRUE",
     table="full2014"
   ),
-  "Non Salary Grants"=list(
+  "Non Fellowship Grants"=list(
     var.type="categorical",
     var.query="!is.na(isSalaryGrant) & isSalaryGrant == FALSE",
     table="full2014"
@@ -88,6 +88,11 @@ lookup <- list(
   "Field of Research"=list(
     var.type="categorical",
     var.query="FoR",
+    table="full2014"
+  ),
+  "Individual's Title"=list(
+    var.type="categorical",
+    var.query="Title",
     table="full2014"
   ),
   "None"=list(

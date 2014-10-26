@@ -43,7 +43,7 @@ plotData <- function(input) {
   }
   
   
-  if (grepl("(discrete)|(continuous)", x.type) && y.type == "categorical") {
+  if (grepl("(point)", x.type) && y.type == "categorical") {
     # Get the Y categories
     eval(parse(
       text = paste0("ycats <- subset[, unique(", y.query, ")]")
@@ -61,12 +61,12 @@ plotData <- function(input) {
       ))
       nGroups <- length(groups)
     } else {
-      nGroups <- 0
+      nGroups <- 1
     }
         
     # If there are only two groups, x is single value per category, and always
     # positive or negative, we can flip over the y axis
-    if (grepl("(positive)", x.type) && grepl("(point)", x.type) && nGroups == 2) {
+    if (grepl("(positive)|(negative)", x.type) && nGroups == 2) {
       ylim = getLimsForManualUsr(c(0, nycats+0.1))
       
       # Determine the x limits
@@ -146,8 +146,8 @@ plotData <- function(input) {
       ) 
     }
     
-    # Create bar plots for without groups
-    else if (grepl("(point)|(positive)", x.type)) {
+    # Create bar plots for without groups where y is categorical
+    else if (nGroups == 1) {
       ylim = getLimsForManualUsr(c(0, nycats+0.1))
       
       # Determine the x limits
@@ -173,7 +173,7 @@ plotData <- function(input) {
       # Create the empty plot with the appropriate axes
       leftMargin <- marginSize(ycats)
       
-      par(mar=c(5,leftMargin,4,8))
+      par(mar=c(5,leftMargin,4,1))
       nullPlot(xlim=xlim, ylim=ylim)
       mtext(x.var, side=1, line=3, cex=1.4)
       axis(
@@ -196,7 +196,12 @@ plotData <- function(input) {
         ))
           
         # Render the bars for each y-axis category
-        color <- "#99d8c9"
+        colors <- lookup[[y.var]][["colors"]]
+        if (is.null(colors)) {
+          color <- "#99d8c9"
+        } else {
+          color <- colors[[ycats[ii]]]
+        }
         if (xlim[1] == 0) { # if x is negative 
           rect(
             xleft=0,
@@ -207,13 +212,100 @@ plotData <- function(input) {
           )
         } else { # if x is positive
           rect(
-            xleft=x.al,
+            xleft=x.val,
             ybottom=ii-1,
             xright=0,
             ytop=ii,
             col=color
           )
         }
+      }
+    }
+    
+    # Multi-panel figures for groups with more than two categories
+    else {
+      # Determine xlim for all plots
+      ylim = getLimsForManualUsr(c(0, nycats+0.1))
+      xmax <- 0
+      xmin <- 0
+      for (grp in groups) {
+        # Determine the x limits
+        for (ycat in ycats) {
+          fullQ <- paste0(
+            "xdat <- subset[", g.query, ' == "', grp, '" & ', 
+                              y.query, ' == "', ycat, '", ', x.query, "]"
+          ) 
+          eval(parse(
+            text=paste0(
+              "xdat <- subset[", g.query, ' == "', grp, '" & ', 
+                                 y.query, ' == "', ycat, '", ', x.query, "]"
+            ) 
+          ))
+          xmax <- max(c(xmax, xdat)) 
+          xmin <- min(c(xmin, xdat))
+        }
+      }
+      xlim = c(
+        ifelse(xmin == 0, 0, xmin*1.1), 
+        ifelse(xmax == 0, 0, xmax*1.1)
+      )
+      # Create the empty plot with the appropriate axes
+      leftMargin <- marginSize(ycats)
+      # generate all plots
+      par(mfrow=c(nGroups, 1), mar=c(7, leftMargin, 4, 1))
+
+      groups <- getOrder(group, x.query, subset)
+      
+      for (gg in seq_along(groups)) {   
+        grp <- groups[[gg]]
+        nullPlot(xlim=xlim, ylim=ylim)
+        mtext(x.var, side=1, line=3, cex=1.1)
+        axis(
+          side=1, at=seq(xlim[1], xlim[2], length=7),
+          labels=HumanReadable(seq(xlim[1], xlim[2], length=7))
+        )
+        mtext(grp, side=3, cex=1.6, line=1)
+        
+        # Make sure the y categories are ordered, for consistency
+        ycats <- getOrder(y.var, x.query, subset)
+        
+        # For each category and group
+        for (ii in seq_along(ycats)) {
+          mtext(ycats[[ii]], side=2, at=ii-0.5, las=2)
+          
+          eval(parse(
+            text=paste0(
+              "x.val <- subset[", g.query, ' == "', grp, '" & ',
+                                  y.query, ' == "', ycats[[ii]], '", ', 
+                                  x.query, "]"  
+            )  
+          ))
+          
+          # Render the bars for each y-axis category
+          colors <- lookup[[y.var]][["colors"]]
+          if (is.null(colors)) {
+            color <- "#99d8c9"
+          } else {
+            color <- colors[[ycats[ii]]]
+          }
+          if (xlim[1] == 0) { # if x is negative 
+            rect(
+              xleft=0,
+              ybottom=ii-1,
+              xright=x.val,
+              ytop=ii,
+              col=color
+            )
+          } else { # if x is positive
+            rect(
+              xleft=x.val,
+              ybottom=ii-1,
+              xright=0,
+              ytop=ii,
+              col=color
+            )
+          }
+        } 
       }
     }
   }

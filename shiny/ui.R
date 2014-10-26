@@ -17,27 +17,33 @@ shinyUI(fluidPage(
     sidebarPanel(
       selectInput(
         "x.cat", "X axis", 
-        choices=c("Number Funded", "Total Amount Awarded"),
+        choices=c(
+          "Number Funded", "Total Amount Awarded"
+        ),
         selected="Number Funded"
       ),
       selectInput(
         "y.cat", "Y axis", 
         choices=c(
           "Career Stage", "Grant Type", "Grant Sub Type", "State", "Institution",
-          "Broad Research Area", "Field of Research",
-          "Field of Research Category"
+          "Broad Research Area", "Field of Research", "Sex",
+          "Field of Research Category", "Individual's Title"
         ),
         selected="Career Stage"
       ),
       selectInput(
         "group", "Group By", 
-        choices=c("Sex", "None"),
+        choices=c(
+          "None", "Sex", "Career Stage", "Grant Type", "Grant Sub Type", "State", 
+          "Institution", "Broad Research Area", "Field of Research",
+          "Field of Research Category", "Individual's Title"
+        ),
         selected="Sex"
       ),
       selectInput(
         "filter", "Filter By", 
-        choices=c("Salary Grants", "Non Salary Grants", "None"),
-        selected="Salary Grants"
+        choices=c("Fellowship Grants", "Non Fellowship Grants", "None"),
+        selected="Fellowship Grants"
       )
     ),
 
@@ -46,7 +52,7 @@ shinyUI(fluidPage(
       plotOutput("distPlot", height="auto"),
       br(),
       p(
-        strong("Note:"), "Gender was inferred by title or using historical data",
+        strong("Note:"), "Sex was inferred by title or using historical data",
         "from the U.S. Social Security Administration baby name database from",
         "the years 1932 through 2012 using the", 
         a("R Gender package", href="https://github.com/ropensci/gender"), "."
@@ -70,6 +76,11 @@ shinyUI(fluidPage(
             'Grant Sub Type containing "Research Fellowship"'
           )
         )
+      ),
+      p(
+        "Approximately 13% of grants (74/974 records) were awarded to a",
+        "'Research Admin Officer', for which sex and career stage could not be",
+        "inferred."  
       ),
       p(
         "Original data was downloaded from the",

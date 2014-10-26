@@ -93,7 +93,7 @@ HumanReadable <- function(nums) {
 # Determine margin size based on the length of the labels
 marginSize <- function(labels) {
   max_len <- max(sapply(labels, strwidth))
-  max_len * 45
+  max_len * 60
 }
 
 

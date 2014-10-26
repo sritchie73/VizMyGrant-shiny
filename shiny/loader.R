@@ -70,6 +70,21 @@ lookup <- list(
     var.query="Institution",
     table="full2014"
   ),
+  "Broad Research Area"=list(
+    var.type="categorical",
+    var.query="BroadArea",
+    table="full2014"
+  ),
+  "Field of Research Category"=list(
+    var.type="categorical",
+    var.query="Category",
+    table="full2014"
+  ),
+  "Field of Research"=list(
+    var.type="categorical",
+    var.query="FoR",
+    table="full2014"
+  ),
   "None"=list(
     var.type=NA,
     var.query=NA,

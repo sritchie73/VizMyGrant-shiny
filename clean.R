@@ -1,4 +1,4 @@
- library(xlsx)
+library(xlsx)
 library(data.table)
 library(stringr)
 library(gender)
@@ -160,6 +160,9 @@ fundAug2014 <- aug2014[,
 
 fundAug2014[,X2014 := NA_real_]
 
+fundAug2014 <- fundAug2014[, c("APP.ID", paste0("X", 2014:2019)), with=F]
+fundOct2014 <- fundOct2014[, c("APP.ID", paste0("X", 2014:2019)), with=F]
+
 fundTable <- rbind(fundOct2014, fundAug2014)
 
 longTable <- data.table(
@@ -183,9 +186,13 @@ setkey(grantLength, "ApplicationId")
 setkey(clean, "ApplicationId")
 
 clean <- merge(clean, grantLength)
+
+# Fix bad institution
+clean[, Institution := gsub(",", "", Institution)]
  
-# Remove bad rows
-clean <- clean[-which(ApplicationId == 1)]
+# Fix a bad entry
+clean[Name == "Newell Johnson", Title := "E/Pr"]
+clean[Name == "Newell Johnson", CareerStage := "Senior"]
 
 # Write out tables
 write.table(clean, file="cleaned.csv", sep=",", row.names=FALSE, quote=FALSE)

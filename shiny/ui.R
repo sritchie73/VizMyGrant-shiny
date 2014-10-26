@@ -22,13 +22,13 @@ shinyUI(fluidPage(
       ),
       selectInput(
         "y.cat", "Y axis", 
-        choices=c("Career Stage"),
+        choices=c("Career Stage", "Grant Type", "State", "Institution"),
         selected="Career Stage"
       ),
       selectInput(
         "group", "Group By", 
-        choices=c("Gender", "None"),
-        selected="Gender"
+        choices=c("Sex", "None"),
+        selected="Sex"
       ),
       selectInput(
         "filter", "Filter By", 
@@ -39,7 +39,7 @@ shinyUI(fluidPage(
 
     # Show a plot of the generated distribution
     mainPanel(
-      plotOutput("distPlot"),
+      plotOutput("distPlot", height="auto"),
       br(),
       p(
         strong("Note:"), "Gender was inferred by title or using historical data",
@@ -56,7 +56,7 @@ shinyUI(fluidPage(
             '; or a Grant Sub Type ending with "ECF"'
           ),
           tags$li(
-            strong("Mid Career:"), "where the individual's title Associated Professor;", 
+            strong("Mid Career:"), "where the individual's title Associate Professor;", 
             'or a Grant Type containing "Career Development Fellowship"; or a',
             'Grant Sub Type ending with "CDF"'
           ),
@@ -79,7 +79,11 @@ shinyUI(fluidPage(
         a(
           "Summary details of the 29 August 2014 Announcement (XLS, 49KB)",
           href="https://www.nhmrc.gov.au/_files_nhmrc/file/grants/funding/2014/summary_data_august_2014_announcement_140919.xlsx"
-        )
+        ),
+        br(),
+        br(),
+        includeHTML("copyright.html")
+        
       )
     )
     

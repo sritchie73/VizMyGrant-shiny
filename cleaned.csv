@@ -310,7 +310,7 @@ ApplicationId,Title,Name,Gender,CareerStage,GrantType,isSalaryGrant,GrantSubType
 1081288,A/Pr,Peter Anderson,male,Senior,NHMRC Research Fellowships,TRUE,Research Fellowship,Murdoch Childrens Research Institute,VIC,Clinical Medicine and Science,PAEDIATRICS AND REPRODUCTIVE MEDICINE,Paediatrics,611645,5
 1081290,Prof,Herbert Herzog,male,Senior,NHMRC Project Grants,FALSE,Standard Project Grant,Garvan Institute of Medical Research,NSW,Basic Science,NEUROSCIENCES,Neurosciences not elsewhere classified,694152,4
 1081312,Dr,Marina Pajic,female,Early Career,NHMRC Project Grants,FALSE,Standard Project Grant,Garvan Institute of Medical Research,NSW,Basic Science,ONCOLOGY AND CARCINOGENESIS,Oncology and Carcinogenesis not elsewhere classified,614495,3
-1081320,NA,Newell Johnson,male,NA,NHMRC Project Grants,FALSE,Standard Project Grant,Griffith University,QLD,Public Health,DENTISTRY,Dentistry not elsewhere classified,1020590.2,3
+1081320,E/Pr,Newell Johnson,male,Senior,NHMRC Project Grants,FALSE,Standard Project Grant,Griffith University,QLD,Public Health,DENTISTRY,Dentistry not elsewhere classified,1020590.2,3
 1081328,A/Pr,Sophia Zoungas,female,Senior,NHMRC Research Fellowships,TRUE,Research Fellowship,Monash University,VIC,Public Health,PUBLIC HEALTH AND HEALTH SERVICES,Preventive Medicine,611645,5
 1081334,Prof,Christine Clarke,female,Senior,NHMRC Research Fellowships,TRUE,Research Fellowship,University of Sydney,NSW,Basic Science,BIOCHEMISTRY AND CELL BIOLOGY,Cell Development Proliferation and Death,814980,5
 1081344,Dr,Anthony Newall,male,Early Career,NHMRC Project Grants,FALSE,Standard Project Grant,University of New South Wales,NSW,Public Health,APPLIED ECONOMICS,Health Economics,236941.5,2
@@ -924,7 +924,7 @@ ApplicationId,Title,Name,Gender,CareerStage,GrantType,isSalaryGrant,GrantSubType
 9000241,NA,Research Admin Officer,NA,NA,NHMRC Infrastructure Grants,FALSE,Independent MRI Infrastructure Grant,Austin Medical Research Foundation,VIC,Not Applicable,Not Applicable,Not Applicable,32151,1
 9000242,NA,Research Admin Officer,NA,NA,NHMRC Infrastructure Grants,FALSE,Independent MRI Infrastructure Grant,Cancer Council NSW,NSW,Not Applicable,Not Applicable,Not Applicable,15472,1
 9000243,NA,Research Admin Officer,NA,NA,NHMRC Infrastructure Grants,FALSE,Independent MRI Infrastructure Grant,Heart Research Institute,NSW,Not Applicable,Not Applicable,Not Applicable,8011,1
-9000244,NA,Research Admin Officer,NA,NA,NHMRC Infrastructure Grants,FALSE,Independent MRI Infrastructure Grant,Mater Medical Research Institute, Brisbane,QLD,Not Applicable,Not Applicable,Not Applicable,5553
+9000244,NA,Research Admin Officer,NA,NA,NHMRC Infrastructure Grants,FALSE,Independent MRI Infrastructure Grant,Mater Medical Research Institute Brisbane,QLD,Not Applicable,Not Applicable,Not Applicable,5553,1
 9000245,NA,Research Admin Officer,NA,NA,NHMRC Infrastructure Grants,FALSE,Independent MRI Infrastructure Grant,Howard Florey Institute,VIC,Not Applicable,Not Applicable,Not Applicable,2764,1
 9000246,NA,Research Admin Officer,NA,NA,NHMRC Infrastructure Grants,FALSE,Equipment Grant,University of Melbourne,VIC,Not Applicable,Not Applicable,Not Applicable,816374,1
 9000247,NA,Research Admin Officer,NA,NA,NHMRC Infrastructure Grants,FALSE,Equipment Grant,University of Sydney,NSW,Not Applicable,Not Applicable,Not Applicable,737972,1

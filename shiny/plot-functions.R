@@ -1,7 +1,5 @@
 library(stringr)
 
-source("plot-functions.R")
-
 #' Get the plot limits to set for the desired plot window
 #'
 #' \code{plot} manually adds an extra region to the plot on top of the given
@@ -58,6 +56,8 @@ HumanReadable <- function(nums) {
   } else { # probably $$
     sapply(left, function(nn) {
       pow <- nchar(gsub("-", "", nn))
+      nn <- format(round(as.numeric(nn), digits=-1*(power-2)), scientific=FALSE)
+      
       if (grepl("-", nn)) {
         first <- str_sub(nn, 1, 2)
         second <- str_sub(nn, 3, 3)
@@ -89,3 +89,11 @@ HumanReadable <- function(nums) {
     })
   }
 } 
+
+# Determine margin size based on the length of the labels
+marginSize <- function(labels) {
+  max_len <- max(sapply(labels, strwidth))
+  max_len * 45
+}
+
+

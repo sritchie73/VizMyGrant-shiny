@@ -1,4 +1,7 @@
 library(RColorBrewer)
+library(data.table)
+
+source("plot-functions.R")
 
 plotData <- function(input) {
   x.var <- input$x.cat
@@ -39,6 +42,7 @@ plotData <- function(input) {
     subset <- joined
   }
   
+  
   if (grepl("(discrete)|(continuous)", x.type) && y.type == "categorical") {
     # Get the Y categories
     eval(parse(
@@ -59,7 +63,7 @@ plotData <- function(input) {
     } else {
       nGroups <- 0
     }
-    
+        
     # If there are only two groups, x is single value per category, and always
     # positive or negative, we can flip over the y axis
     if (grepl("(positive)", x.type) && grepl("(point)", x.type) && nGroups == 2) {
@@ -70,23 +74,24 @@ plotData <- function(input) {
       for (ycat in ycats) {
         eval(parse(
           text=paste0(
-            "xdat.g1 <- subset[", g.query, " == '", groups[1], "' & ",
-            y.query, " == '", ycat, "', ", x.query, "]"
+            "xdat.g1 <- subset[", g.query, ' == "', groups[1], '" & ',
+            y.query, ' == "', ycat, '", ', x.query, "]"
           ) 
         ))
         xmax <- max(c(xmax, xdat.g1))
         eval(parse(
           text=paste0(
-            "xdat.g2 <- subset[", g.query, " == '", groups[2], "' & ",
-            y.query, " == '", ycat, "', ", x.query, "]"
+            "xdat.g2 <- subset[", g.query, ' == "', groups[2], '" & ',
+            y.query, ' == "', ycat, '", ', x.query, "]"
           )  
         ))
         xmax <- max(c(xmax, xdat.g2)) 
       }
       xlim = c(-1*(xmax*1.1), xmax*1.1)
       
+      leftMargin <- marginSize(ycats)
       
-      par(mar=c(5,15,4,8))
+      par(mar=c(5,leftMargin,4,8))
       nullPlot(xlim=xlim, ylim=ylim)
       mtext(x.var, side=1, line=3, cex=1.4)
       axisTicks <- seq(xlim[1], xlim[2], length=7)
@@ -97,21 +102,18 @@ plotData <- function(input) {
       )
       
       # Make sure the y categories are ordered, for consistency
-      if (!is.null(lookup[[y.var]][["order"]])) {
-        ycats <- lookup[[y.var]][["order"]]
-      }
+      ycats <- getOrder(y.var, x.query, subset)
       # Make sure the groups are ordered, for consistency
-      if (!is.null(lookup[[group]][["order"]])) {
-        groups <- lookup[[group]][["order"]]
-      }
+      groups <- getOrder(group, x.query, subset)
+
       # For each category and group
       for (ii in seq_along(ycats)) {
         mtext(ycats[[ii]], side=2, at=ii-0.5, las=2)
         for (jj in seq_along(groups)) {
           eval(parse(
             text=paste0(
-              "x.val <- subset[", g.query, " == '", groups[jj], "' & ",
-              y.query, " == '", ycats[[ii]], "', ", x.query, "]"  
+              "x.val <- subset[", g.query, ' == "', groups[jj], '" & ',
+              y.query, ' == "', ycats[[ii]], '", ', x.query, "]"  
             )  
           ))
           
@@ -153,11 +155,11 @@ plotData <- function(input) {
       xmin <- 0
       for (ycat in ycats) {
         fullQ <- paste0(
-          "xdat <- subset[", y.query, " == '", ycat, "', ", x.query, "]"
+          "xdat <- subset[", y.query, ' == "', ycat, '", ', x.query, "]"
         ) 
         eval(parse(
           text=paste0(
-            "xdat <- subset[", y.query, " == '", ycat, "', ", x.query, "]"
+            "xdat <- subset[", y.query, ' == "', ycat, '", ', x.query, "]"
           ) 
         ))
         xmax <- max(c(xmax, xdat)) 
@@ -169,7 +171,9 @@ plotData <- function(input) {
       )
       
       # Create the empty plot with the appropriate axes
-      par(mar=c(5,8,4,8))
+      leftMargin <- marginSize(ycats)
+      
+      par(mar=c(5,leftMargin,4,8))
       nullPlot(xlim=xlim, ylim=ylim)
       mtext(x.var, side=1, line=3, cex=1.4)
       axis(
@@ -177,23 +181,22 @@ plotData <- function(input) {
         labels=HumanReadable(seq(xlim[1], xlim[2], length=7))
       )
       
-      # Make sure the y categories are ordered, if ordering makes sense!
-      if (!is.null(lookup[[y.var]][["order"]])) {
-        ycats <- lookup[[y.var]][["order"]]
-      }
+      # Make sure the y categories are ordered, for consistency
+      ycats <- getOrder(y.var, x.query, subset)
+
       # For each category and group
       for (ii in seq_along(ycats)) {
         mtext(ycats[[ii]], side=2, at=ii-0.5, las=2)
        
         eval(parse(
           text=paste0(
-            "x.val <- subset[", y.query, " == '", ycats[[ii]], "', ", 
+            "x.val <- subset[", y.query, ' == "', ycats[[ii]], '", ', 
             x.query, "]"  
           )  
         ))
           
         # Render the bars for each y-axis category
-        color <- "#e6550d"
+        color <- "#99d8c9"
         if (xlim[1] == 0) { # if x is negative 
           rect(
             xleft=0,

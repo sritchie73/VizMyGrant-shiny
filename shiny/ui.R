@@ -23,7 +23,7 @@ shinyUI(fluidPage(
       selectInput(
         "y.cat", "Y axis", 
         choices=c(
-          "Career Stage", "Grant Type", "State", "Institution",
+          "Career Stage", "Grant Type", "Grant Sub Type", "State", "Institution",
           "Broad Research Area", "Field of Research",
           "Field of Research Category"
         ),

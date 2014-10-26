@@ -50,6 +50,11 @@ lookup <- list(
     var.query="GrantType",
     table="full2014"
   ),
+  "Grant Sub Type"=list(
+    var.type="categorical",
+    var.query="GrantSubType",
+    table="full2014"
+  ),
   "Salary Grants"=list(
     var.type="categorical",
     var.query="!is.na(isSalaryGrant) & isSalaryGrant == TRUE",

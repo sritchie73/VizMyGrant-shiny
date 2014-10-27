@@ -10,7 +10,7 @@ library(shiny)
 shinyUI(fluidPage(
 
   # Application title
-  titlePanel("What does the funding landscape for NHRMC look like in 2014?"),
+  titlePanel("What does the funding landscape for NHMRC look like in 2014?"),
 
   # Sidebar with a slider input for number of bins
   sidebarLayout(

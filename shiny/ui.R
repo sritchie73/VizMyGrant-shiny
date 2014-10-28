@@ -18,7 +18,8 @@ shinyUI(fluidPage(
       selectInput(
         "x.cat", "X axis", 
         choices=c(
-          "Number Funded", "Total Amount Awarded"
+          "Number Funded", "Total Amount Awarded", "Median Grant Length",
+          "Median Amount Awarded"
         ),
         selected="Number Funded"
       ),

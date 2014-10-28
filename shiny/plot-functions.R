@@ -35,6 +35,7 @@ HumanReadable <- function(nums) {
   # split numbers over decimal point
   nums <- as.character(nums)
   left <- sapply(str_split(nums, "\\."), `[[`, 1)
+  right <- NULL
   tryCatch({ 
     right <- sapply(str_split(nums, "\\."), `[[`, 2)
   }, error = function(e) {
@@ -100,4 +101,18 @@ marginSize <- function(labels, multipanel=FALSE) {
     max_len <- max(sapply(labels, strwidth))
     max_len * 60
   }
+}
+
+# show 0 if NA
+cleanMedian <- function(vec, type="integer") {
+  val <- median(vec, na.rm=TRUE)
+  if (is.na(val)) {
+    val <- 0
+  }
+  if (type == "integer") {
+    val <- as.integer(val)
+  } else {
+    val <- as.double(val)
+  }
+  val
 }

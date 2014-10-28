@@ -24,7 +24,17 @@ lookup <- list(
   ),
   "Total Amount Awarded"=list(
     var.type="continuous, positive, point",
-    var.query="sum(TotalAmount)",
+    var.query="sum(TotalAmount, na.rm=TRUE)",
+    table="full2014"
+  ),
+  "Median Grant Length"=list(
+    var.type="point, positive, discrete",
+    var.query="cleanMedian(GrantLength, 'integer')",
+    table="full2014"
+  ),
+  "Median Amount Awarded"=list(
+    var.type="point, positive, continuous",
+    var.query="cleanMedian(TotalAmount, 'double')",
     table="full2014"
   ),
   "Sex"=list(

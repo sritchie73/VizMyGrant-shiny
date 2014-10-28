@@ -100,7 +100,7 @@ plotData <- function(input) {
         side=1, at=axisTicks,
         labels=HumanReadable(abs(axisTicks))
       )
-      
+
       # Make sure the y categories are ordered, for consistency
       ycats <- getOrder(y.var, x.query, subset)
       # Make sure the groups are ordered, for consistency
@@ -250,7 +250,7 @@ plotData <- function(input) {
         ifelse(xmax == 0, 0, xmax*1.1)
       )
       # Create the empty plot with the appropriate axes
-      leftMargin <- marginSize(ycats)
+      leftMargin <- marginSize(ycats, TRUE)
       # generate all plots
       par(mfrow=c(nGroups, 1), mar=c(7, leftMargin, 4, 1))
 

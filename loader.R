@@ -1,10 +1,10 @@
-# Load in the data
+# Load in the clean_data/
 options(stringsAsFactors=FALSE)
 library(data.table)
 
-full2014 <- as.data.table(read.csv("data/cleaned.csv"))
-funding2014 <- as.data.table(read.csv("data/funding-by-year.csv"))
-geoLocations <- as.data.table(read.csv("data/InstitutionNMHRC_geocoded.csv"))
+full2014 <- as.data.table(read.csv("clean_data/cleaned.csv"))
+funding2014 <- as.data.table(read.csv("clean_data/funding-by-year.csv"))
+geoLocations <- as.data.table(read.csv("clean_data/InstitutionNMHRC_geocoded.csv"))
 
 # fix column types
 full2014[, TotalAmount := as.numeric(TotalAmount)]
@@ -116,7 +116,7 @@ getType <- function(ui.query) {
   lookup[[ui.query]][["var.type"]]  
 }
 
-# get the data.table query
+# get the clean_data/.table query
 getDTQ <- function(ui.query) {
   lookup[[ui.query]][["var.query"]]
 }

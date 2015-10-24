@@ -1,3 +1,3 @@
 # deploy shiny server
-library(shinyapps)
-deployApp("shiny", appName="view")
+library(rsconnect)
+deployApp(appDir="shiny", appName="view")

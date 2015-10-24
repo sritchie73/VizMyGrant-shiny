@@ -1,3 +1,3 @@
 # deploy shiny server
 library(shinyapps)
-deployApp(".", appName="view")
+deployApp("shiny", appName="view")

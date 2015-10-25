@@ -98,10 +98,10 @@ createPlot <- function(input, data) {
   fill.ys <- c("Amount awarded", "Total number funded", "Total amount awarded")
   col.ys <- c()
   if (g == "Sex" & y %in% fill.ys) {
-    p <- p + scale_fill_manual(values=c("#e66101", "#5e3c99"), label=capitalize)
+    p <- p + scale_fill_manual(values=c("#d8b365", "#5ab4ac"), label=capitalize)
   }
   if (g == "Sex" & y %in% col.ys) {
-    p <- p + scale_color_manual(values=c("#e66101", "#5e3c99"), label=capitalize)
+    p <- p + scale_color_manual(values=c("#d8b365", "#5ab4ac"), label=capitalize)
   }
   
   # Use human readable axes titles

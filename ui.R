@@ -6,6 +6,8 @@
 #
 
 library(shiny)
+source("scripts/loader.R")
+
 
 shinyUI(fluidPage(
 
@@ -15,93 +17,74 @@ shinyUI(fluidPage(
   # Sidebar with a slider input for number of bins
   sidebarLayout(
     sidebarPanel(
+      h3(strong("Basic plot options")),
       selectInput(
-        "x.cat", "X axis", 
+        "x", "Data to show on the x-axis:", 
         choices=c(
-          "Number Funded", "Total Amount Awarded", "Median Grant Length",
-          "Median Amount Awarded"
-        ),
-        selected="Number Funded"
-      ),
-      selectInput(
-        "y.cat", "Y axis", 
-        choices=c(
-          "Career Stage", "Grant Type", "Grant Sub Type", "State", "Institution",
-          "Broad Research Area", "Field of Research", "Sex",
-          "Field of Research Category", "Individual's Title"
-        ),
-        selected="Career Stage"
-      ),
-      selectInput(
-        "group", "Group By", 
-        choices=c(
-          "None", "Sex", "Career Stage", "Grant Type", "Grant Sub Type", "State", 
+          "Sex", "Career Stage", "Grant Type", "Grant Sub Type", "State", 
           "Institution", "Broad Research Area", "Field of Research",
-          "Field of Research Category", "Individual's Title"
+          "Field of Research Category", "Title"
         ),
         selected="Sex"
       ),
       selectInput(
-        "filter", "Filter By", 
-        choices=c("Fellowship Grants", "Non Fellowship Grants", "None"),
-        selected="Fellowship Grants"
+        "y", "Data to show on the y-axis:", 
+        choices=c(
+          "Amount awarded", "Total amount awarded", "Total number funded"
+        ),
+        selected="Amount awarded"
+      ),
+      textInput(
+        "h", "Plot height (pixels)",
+        value="600"
+      ),
+      h3(strong("Groups to show")),
+      selectInput(
+        "g", "Color within each plot:", 
+        choices=c(
+          "None", "Sex", "Career Stage", "Grant Type", "Grant Sub Type", "State", 
+          "Institution", "Broad Research Area", "Field of Research",
+          "Field of Research Category", "Title"
+        ),
+        selected="Sex"
+      ),
+      selectInput(
+        "p1", "Create a plot for each of:",
+        choices=c(
+          "None", "Sex", "Career Stage", "Grant Type", "Grant Sub Type", "State", 
+          "Institution", "Broad Research Area", "Field of Research",
+          "Field of Research Category", "Title"
+        ),
+        selected="Career Stage"
+      ),
+      selectInput(
+        "p2", "Compare to each of:",
+        choices=c(
+          "None", "Sex", "Career Stage", "Grant Type", "Grant Sub Type", "State", 
+          "Institution", "Broad Research Area", "Field of Research",
+          "Field of Research Category", "Title"
+        ),
+        selected="None"
+      ),
+      h3("Data to show"),
+      checkboxGroupInput(
+        "fS", "Grant Type:",
+        choices = c("Fellowship grant", "Non-fellowship grant"),
+        selected = c("Fellowship grant", "Non-fellowship grant")
+      ),
+      checkboxGroupInput(
+        "fGT", "Specific Grant:",
+        choices = sort(na.omit(unique(full2014[["GrantType"]]))),
+        selected = na.omit(unique(full2014[["GrantType"]]))
       )
+                         
     ),
 
-    # Show a plot of the generated distribution
+    
     mainPanel(
       plotOutput("distPlot", height="auto"),
-      br(),
-      p(
-        strong("Note:"), "Sex was inferred by title or using historical data",
-        "from the U.S. Social Security Administration baby name database from",
-        "the years 1932 through 2012 using the", 
-        a("R Gender package", href="https://github.com/ropensci/gender"), "."
-      ),
-      p(
-        "Career stage was inferred based on title, then by fellowship type as follows:",
-        tags$ul(
-          tags$li(
-            strong("Early Career:"), "where the individual's title is Mr, Mrs,",
-            'Miss, Ms, or Dr; or a Grant Type containing "Early Career Fellowship"',
-            '; or a Grant Sub Type ending with "ECF"'
-          ),
-          tags$li(
-            strong("Mid Career:"), "where the individual's title Associate Professor;", 
-            'or a Grant Type containing "Career Development Fellowship"; or a',
-            'Grant Sub Type ending with "CDF"'
-          ),
-          tags$li(
-            strong("Senior:"), "where the individual's title is Professor, or",
-            'Emiritus Professor; a Grant Type of "NHMRC Partnership"; or a', 
-            'Grant Sub Type containing "Research Fellowship"'
-          )
-        )
-      ),
-      p(
-        "Approximately 13% of grants (74/974 records) were awarded to a",
-        "'Research Admin Officer', for which sex and career stage could not be",
-        "inferred."  
-      ),
-      p(
-        "Original data was downloaded from the",
-        a("NHMRC website", href="https://www.nhmrc.gov.au/grants/outcomes-funding-rounds"),
-        ". Summary files for 2014 were as follows:", br(),
-        a(
-          "Summary details of the 17 Oct 2014 Announcement (XLS, 241KB)", 
-          href="https://www.nhmrc.gov.au/_files_nhmrc/file/grants/funding/2014/summary_data_17_october_2014_announcement_141020.xlsx"
-        ),
-        br(),
-        a(
-          "Summary details of the 29 August 2014 Announcement (XLS, 49KB)",
-          href="https://www.nhmrc.gov.au/_files_nhmrc/file/grants/funding/2014/summary_data_august_2014_announcement_140919.xlsx"
-        ),
-        br(),
-        br(),
-        includeHTML("copyright.html")
-        
-      )
+      includeHTML("inference-info.html"),
+      includeHTML("copyright.html")
     )
-    
   )
 ))

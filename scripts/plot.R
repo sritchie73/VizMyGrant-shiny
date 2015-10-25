@@ -1,3 +1,6 @@
+library(scales)
+source("scripts/utils.R")
+
 createPlot <- function(input, data) {
   # Map from human readable to column names
   map <- c(
@@ -82,12 +85,39 @@ createPlot <- function(input, data) {
   
   # Change color mapping to be gender neutral
   fill.ys <- c("Amount awarded", "Total number funded", "Total amount awarded")
+  col.ys <- c()
   if (g == "Sex" & y %in% fill.ys) {
-    p <- p + scale_fill_brewer(palette="PuOr")
-  } else if (g == "Sex" & y %in% col.ys) {
-    p <- p + scale_color_brewer(palette="PuOr")
+    p <- p + scale_fill_brewer(palette="PuOr", label=capitalize)
+  }
+  if (g == "Sex" & y %in% col.ys) {
+    p <- p + scale_color_brewer(palette="PuOr", label=capitalize)
   }
   
-  p <- p + xlab(x)
-  p <- p + ylab(y)
+  # Use human readable axes titles
+  p <- p + xlab(paste0("\n",x))
+  p <- p + ylab(paste0(y, "\n"))
+  
+  # Human readable legend title
+  if (y %in% fill.ys) {
+    p <- p + labs(color = g)
+  } 
+  if (y %in% col.ys) {
+    p <- p + labs(fill = g)
+  }
+  
+  # Human readable axis text
+  if (y %in% c("Amount awarded", "Total amount awarded")) {
+    p <- p + scale_y_continuous(label=dollar)
+  }
+  p <- p + scale_x_discrete(label=capitalize)
+  
+  # Modify the theme of the plot
+  p <- p + theme_set(theme_gray(base_size = 22)) + 
+    theme(
+      legend.title = element_text(size = 20, face="bold"),
+      strip.text = element_text(size = 20, face="bold"),
+      legend.key.height = unit(1, "cm")
+    )
+  
+  return(p)
 }

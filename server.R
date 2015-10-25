@@ -6,6 +6,7 @@
 
 library(shiny)
 library(ggplot2)
+library(grid)
 
 source("scripts/loader.R")
 source("scripts/plot.R")

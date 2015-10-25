@@ -29,13 +29,13 @@ createPlot <- function(input, data) {
   data <- data[
     !is.na(data[[map[x]]]) & !is.na(data[[map[y]]])
   ]
-  if (g != "None") {
+  if (g != "-") {
     data <- data[!is.na(data[[map[g]]])]
   }
-  if (p1 != "None") {
+  if (p1 != "-") {
     data <- data[!is.na(data[[map[p1]]])]
   }
-  if (p2 != "None") {
+  if (p2 != "-") {
     data <- data[!is.na(data[[map[p2]]])]
   }
   
@@ -48,18 +48,21 @@ createPlot <- function(input, data) {
   data <- data[
     is.na(data[["GrantType"]]) | data[["GrantType"]] %in% input$fGT
   ]
+  data <- data[
+    is.na(data[["Institution"]]) | data[["Institution"]] %in% input$fI
+  ]
   
   # Add geometry layer based on data to show on the y axis
   if (y == "Amount awarded") {
     p <- ggplot(data, aes_string(x=map[x], y=map[y]))
-    if (g == "None") {
+    if (g == "-") {
       p <- p + geom_boxplot()
     } else {
       p <- p + geom_boxplot(aes_string(fill=map[g]))
     }
   } else if (y == "Total number funded") {
     p <- ggplot(data, aes_string(x=map[x]))
-    if (g == "None") {
+    if (g == "-") {
       p <- p + geom_bar(stat="bin")
     } else {
       p <- p + geom_bar(stat="bin", position="dodge", aes_string(fill=map[g]))
@@ -74,7 +77,7 @@ createPlot <- function(input, data) {
     ]
     
     p <- ggplot(data, aes_string(x=map[x], y=map[y]))
-    if (g == "None") {
+    if (g == "-") {
       p <- p + geom_bar(stat="identity")
     } else {
       p <- p + geom_bar(
@@ -86,11 +89,11 @@ createPlot <- function(input, data) {
   
   
   # Add facets
-  if (p1 != "None" & p2 == "None") {
+  if (p1 != "-" & p2 == "-") {
     p <- p + facet_wrap(as.formula(paste("~", map[p1])))
-  } else if (p1 == "None" & p2 != "None") {
+  } else if (p1 == "-" & p2 != "-") {
     p <- p + facet_wrap(as.formula(paste(map[p2], "~")))
-  } else if (p1 != "None" & p2 != "None") {
+  } else if (p1 != "-" & p2 != "-") {
     p <- p + facet_grid(as.formula(paste(map[p2], "~", map[p1])))
   }
   

@@ -42,7 +42,7 @@ shinyUI(fluidPage(
       selectInput(
         "g", "Color within each plot:", 
         choices=c(
-          "None", "Sex", "Career Stage", "Grant Type", "Grant Sub Type", "State", 
+          "-", "Sex", "Career Stage", "Grant Type", "Grant Sub Type", "State", 
           "Institution", "Broad Research Area", "Field of Research",
           "Field of Research Category", "Title"
         ),
@@ -51,7 +51,7 @@ shinyUI(fluidPage(
       selectInput(
         "p1", "Create a plot for each of:",
         choices=c(
-          "None", "Sex", "Career Stage", "Grant Type", "Grant Sub Type", "State", 
+          "-", "Sex", "Career Stage", "Grant Type", "Grant Sub Type", "State", 
           "Institution", "Broad Research Area", "Field of Research",
           "Field of Research Category", "Title"
         ),
@@ -60,13 +60,13 @@ shinyUI(fluidPage(
       selectInput(
         "p2", "Compare to each of:",
         choices=c(
-          "None", "Sex", "Career Stage", "Grant Type", "Grant Sub Type", "State", 
+          "-", "Sex", "Career Stage", "Grant Type", "Grant Sub Type", "State", 
           "Institution", "Broad Research Area", "Field of Research",
           "Field of Research Category", "Title"
         ),
-        selected="None"
+        selected="-"
       ),
-      h3("Data to show"),
+      h3("Filter data:"),
       selectInput(
         "fS", "Grant Type:",
         choices = c("Fellowship grant", "Non-fellowship grant"),
@@ -78,12 +78,31 @@ shinyUI(fluidPage(
         choices = sort(na.omit(unique(full2014[["GrantType"]]))),
         selected = sort(na.omit(unique(full2014[["GrantType"]]))), 
         multiple=TRUE
+      ),
+      selectInput(
+        "fI", "Institute:",
+        choices = sort(na.omit(unique(full2014[["Institution"]]))),
+        selected = sort(na.omit(unique(full2014[["Institution"]]))),
+        multiple=TRUE
       )
     ),
 
     
     mainPanel(
       plotOutput("distPlot", height="auto"),
+      hr(),
+      fluidRow(
+        column(3, textInput("fname", "Save as...", value="VizMyGrant.png")),
+        column(3, textInput("pwidth", "Width (pixels)", value="1200")),
+        column(3, textInput("pheight", "Height (pixels)", value="600")),
+        column(2, 
+          # clungy hack to make the save image button appear in the same 
+          # vertical location as the other inputs
+          HTML('<label for="saveImage"><font color="white">Button</font></label>'), 
+          downloadButton("saveImage", label = "Save image")
+        )
+      ),
+      hr(),
       includeHTML("inference-info.html"),
       includeHTML("copyright.html")
     )

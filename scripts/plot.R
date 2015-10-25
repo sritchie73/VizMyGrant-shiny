@@ -80,6 +80,14 @@ createPlot <- function(input, data) {
     p <- p + facet_grid(as.formula(paste(map[p2], "~", map[p1])))
   }
   
+  # Change color mapping to be gender neutral
+  fill.ys <- c("Amount awarded", "Total number funded", "Total amount awarded")
+  if (g == "Sex" & y %in% fill.ys) {
+    p <- p + scale_fill_brewer(palette="PuOr")
+  } else if (g == "Sex" & y %in% col.ys) {
+    p <- p + scale_color_brewer(palette="PuOr")
+  }
+  
   p <- p + xlab(x)
   p <- p + ylab(y)
 }

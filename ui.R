@@ -67,17 +67,18 @@ shinyUI(fluidPage(
         selected="None"
       ),
       h3("Data to show"),
-      checkboxGroupInput(
+      selectInput(
         "fS", "Grant Type:",
         choices = c("Fellowship grant", "Non-fellowship grant"),
-        selected = c("Fellowship grant", "Non-fellowship grant")
+        selected = c("Fellowship grant", "Non-fellowship grant"),
+        multiple=TRUE
       ),
-      checkboxGroupInput(
+      selectInput(
         "fGT", "Specific Grant:",
         choices = sort(na.omit(unique(full2014[["GrantType"]]))),
-        selected = na.omit(unique(full2014[["GrantType"]]))
+        selected = sort(na.omit(unique(full2014[["GrantType"]]))), 
+        multiple=TRUE
       )
-                         
     ),
 
     

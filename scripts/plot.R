@@ -65,11 +65,22 @@ createPlot <- function(input, data) {
       p <- p + geom_bar(stat="bin", position="dodge", aes_string(fill=map[g]))
     }
   } else if (y == "Total amount awarded") {
+    # We need to create a summary table based on the groupings and panels 
+    # because ggplot2 won't let us do this manually
+    data <- data[,
+      list(TotalAmount=sum(TotalAmount)), 
+      # The na.omit allows us to dynamically handle panels: if they exist.
+      by=eval(na.omit(c(map[x], map[g], map[p1], map[p2]))) 
+    ]
+    
     p <- ggplot(data, aes_string(x=map[x], y=map[y]))
     if (g == "None") {
-      p <- p + geom_bar(stat="sum")
+      p <- p + geom_bar(stat="identity")
     } else {
-      p <- p + geom_bar(stat="sum", position="dodge", aes_string(fill=map[g]))
+      p <- p + geom_bar(
+        stat="identity", position="dodge", 
+        aes_string(fill=map[g])
+      )
     }
   }
   
@@ -87,10 +98,10 @@ createPlot <- function(input, data) {
   fill.ys <- c("Amount awarded", "Total number funded", "Total amount awarded")
   col.ys <- c()
   if (g == "Sex" & y %in% fill.ys) {
-    p <- p + scale_fill_brewer(palette="PuOr", label=capitalize)
+    p <- p + scale_fill_manual(values=c("#e66101", "#5e3c99"), label=capitalize)
   }
   if (g == "Sex" & y %in% col.ys) {
-    p <- p + scale_color_brewer(palette="PuOr", label=capitalize)
+    p <- p + scale_color_manual(values=c("#e66101", "#5e3c99"), label=capitalize)
   }
   
   # Use human readable axes titles
@@ -112,10 +123,14 @@ createPlot <- function(input, data) {
   p <- p + scale_x_discrete(label=capitalize)
   
   # Modify the theme of the plot
-  p <- p + theme_set(theme_gray(base_size = 22)) + 
+  p <- p + 
     theme(
-      legend.title = element_text(size = 20, face="bold"),
+      legend.title = element_text(size = 18, face="bold"),
       strip.text = element_text(size = 20, face="bold"),
+      axis.text = element_text(size = 16),
+      axis.text.x = element_text(angle=90),
+      axis.title = element_text(size = 18),
+      legend.text = element_text(size = 16),
       legend.key.height = unit(1, "cm")
     )
   

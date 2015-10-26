@@ -92,7 +92,7 @@ createPlot <- function(input, data) {
   if (p1 != "-" & p2 == "-") {
     p <- p + facet_wrap(as.formula(paste("~", map[p1])))
   } else if (p1 == "-" & p2 != "-") {
-    p <- p + facet_wrap(as.formula(paste(map[p2], "~")))
+    p <- p + facet_grid(as.formula(paste(map[p2], "~ .")))
   } else if (p1 != "-" & p2 != "-") {
     p <- p + facet_grid(as.formula(paste(map[p2], "~", map[p1])))
   }

@@ -2,8 +2,8 @@ name: view
 account: viz-my-grant
 server: shinyapps.io
 appId: 22677
-bundleId: 296963
+bundleId: 297945
 url: https://viz-my-grant.shinyapps.io/view
-when: 1445755107.11254
+when: 1445820486.19507
 asMultiple: FALSE
 asStatic: FALSE
